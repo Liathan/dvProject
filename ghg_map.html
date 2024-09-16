@@ -22,15 +22,20 @@
         <h1>Greenhouse gasses in Europe</h1>
         <h3>Andrea Marchi</h3>
     </header>
-    <div id="ghg_map" class="chart"></div>
-    <div id="mapDiv">
-        <select id="selectQuarter"></select>
-        <button id="playButton"><i class="fa fa-play"></i></button>
+    <div id="ghg_map_Abs" class="chart"></div>
+    <div name="mapDiv_Abs">
+        <select id="selectQuarter_Abs"></select>
+        <button id="playButton_Abs"><i class="fa fa-play" map="0"></i></button>
+    </div>
+    <div id="ghg_map_PC" class="chart"></div>
+    <div name="mapDiv_PC">
+        <select id="selectQuarter_PC"></select>
+        <button id="playButton_PC" ><i class="fa fa-play" map="1"></i></button>
     </div>
     
     <script>
         quarters.forEach(function (el, i){
-            d3.select("#selectQuarter").append("option").html(el).attr("value", i)            
+            d3.selectAll("select").append("option").html(el).attr("value", i)            
         });
     </script>
     <script src="js/ghg_map.js"></script>
