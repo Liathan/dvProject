@@ -10,7 +10,7 @@ const nameMap = new Map(
     [ "Belgium","BE"],
     [ "Bulgaria","BG"],
     [ "Cyprus","CY"],
-    [ "Czech Republic","CZ"],
+    [ "Czech_Republic","CZ"],
     [ "Germany","DE"],
     [ "Denmark","DK"],
     [ "Estonia","EE"],

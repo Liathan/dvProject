@@ -29,7 +29,6 @@ const svg_map_PC = d3.select(id_map_PC)
     .attr("viewBox", '0 0 ' + (width_map + margin_map.left + margin_map.right) +
         ' ' + (height_map + margin_map.top + margin_map.bottom))
     .append("g")
-var pippo
 
 svg_map = [svg_map_Abs, svg_map_PC]
 
@@ -81,6 +80,26 @@ var minPC = 0
 var maxAbs = 0
 var minAbs = 0
 
+const tooltip_ABS = d3.select(id_map_Abs).append("div")
+    .attr("class", "tooltip")
+    .style("font-size", "14px")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+    .style("opacity", 0);
+
+const tooltip_PC = d3.select(id_map_PC).append("div")
+    .attr("class", "tooltip")
+    .style("font-size", "14px")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+    .style("opacity", 0);
+
 Promise.all([
     d3.json("data/europe_.geojson"),
     d3.csv("data/perCapita.csv").then( function (d) {
@@ -123,16 +142,15 @@ Promise.all([
         projection.clipExtent([[0, 0], [width_map / 4 *3 , height_map]])
         projection.center([16.39333,63])
         // projection.translate(0, 0)
-        pippo = loadData
         d3.selectAll("svg").select("g").append("g")
         .selectAll("path")
         .data(topo.features)
         .join("path")
             .attr("d", d3.geoPath().projection(projection))
             // .attr("fill", function (d) { if (nameArr.includes(d.properties.name)) return "red"; else return "blue"})
-            .attr("class", (d) => nameMap.get(d.properties.name) || "ND")
+            .attr("class", (d) => (nameMap.get(d.properties.name) || "ND") + " "+ d.properties.name)
             .style("fill-opacity", "0.9")
-            .style("stroke", "white")
+            .style("stroke", "black")
             .style("stroke-width", "1px");
 
         legendHeight = height_map - 50
@@ -168,7 +186,70 @@ Promise.all([
         .attr("x1", 0).attr("x2", 0).attr("y1", 1).attr("y2", 0)
         .selectAll("stop").data(PCStops).join("stop").attr("offset", (d, i) => i / 5).attr("stop-color", (d) => d)
 
+        svg_map_Abs.join("g").selectAll("path")
+        .on("mouseover", function (e, d){
+            svg_map_Abs.selectAll("path").style("stroke", "transparent")
+            .style("fill-opacity", "0.5").transition("selected")
+            .duration(300)
 
+            var name = d.properties.name
+            idx = nameArr.indexOf(nameMap.get(name))
+            value = tonnes[0].get(quarters[+select[0].value])[idx] || "Extra EU Country"
+
+            svg_map_Abs.selectAll("."+name).style("stroke", "#000")
+            .style("stroke-width", "2px").style("fill-opacity","1.0")
+            .transition("selected").duration(300);
+
+            tooltip_ABS.transition("appear-box").duration(300)
+            .style("opacity", "0.9")
+
+            tooltip_ABS.html("<span class='tooltiptext'>" + "<b>Name: " + name +
+                "</b><br>" + "CO2e tonnes: " + value + "</span>")
+            .style("left", (e.pageX) + "px")
+            .style("top", (e.pageY - 28) + "px");
+
+
+        }).on("mouseout", function (e, d){
+            svg_map_Abs.selectAll("path").style("stroke", "white")
+            .style("stroke-width", "1px").style("fill-opacity", "0.9")
+            .transition("selected").duration(300)
+        })
+        svg_map_PC.join("g").selectAll("path")
+        .on("mouseover", function (e, d){
+            svg_map_PC.selectAll("path").style("stroke", "transparent")
+            .style("fill-opacity", "0.5").transition("selected")
+            .duration(300)
+
+            var name = d.properties.name
+            idx = nameArr.indexOf(nameMap.get(name))
+            value = tonnes[1].get(quarters[+select[1].value])[idx] || "Extra EU Country"
+
+            svg_map_PC.selectAll("."+name).style("stroke", "#000")
+            .style("stroke-width", "2px").style("fill-opacity","1.0")
+            .transition("selected").duration(300);
+
+            tooltip_PC.transition("appear-box").duration(300)
+            .style("opacity", "0.9")
+
+            tooltip_PC.html("<span class='tooltiptext'>" + "<b>Name: " + name +
+                "</b><br>" + "CO2e tonnes per capita: " + value + "</span>")
+            .style("left", (e.pageX) + "px")
+            .style("top", (e.pageY - 28) + "px");
+
+
+        }).on("mouseout", function (e, d){
+            svg_map_PC.selectAll("path").style("stroke", "black")
+            .style("stroke-width", "1px").style("fill-opacity", "0.9")
+            .transition("selected").duration(300)
+        })
+        
+        svg_map_Abs.selectAll("g").on("mouseleave", function (e,d){
+            tooltip_ABS.transition("disappear-box").duration(300).style("opacity", "0.0")
+        })
+        
+        svg_map_PC.selectAll("g").on("mouseleave", function (e,d){
+            tooltip_PC.transition("disappear-box").duration(300).style("opacity", "0.0")
+        })
         redrawMap(0,0)
         redrawMap(0,1)
         d3.select("#selectQuarter_Abs").on("change", function (d) {
