@@ -76,11 +76,14 @@ function slider(map)
     }
     isPlaying[map] = !isPlaying[map]
 }
+var maxPC = 0
+var minPC = 0
+var maxAbs = 0
+var minAbs = 0
 
 Promise.all([
     d3.json("../data/europe_.geojson"),
     d3.csv("../data/perCapita.csv").then( function (d) {
-        var maxPC = 0
         
         tonnesPC = new Map()
         d.forEach(el => {
@@ -88,19 +91,24 @@ Promise.all([
             M = Math.max(...tmp)
             if(M > maxPC)
                 maxPC = M
+            m = Math.min(...tmp)
+            if(m < maxPC)
+                minPC = m
             tonnesPC.set(el.quarter, tmp)
         });
         tonnes[1] = tonnesPC
         colorScale[1] = d3.scaleSequential([0, maxPC], d3.interpolateReds)
     }),
     d3.csv("../data/absolute.csv").then( function (d) {
-        var maxAbs = 0
         tonnesAbs = new Map()
         d.forEach(el => {
             tmp = Object.values(el).slice(1)
             M = Math.max(...tmp)
             if(M > maxAbs)
                 maxAbs = M
+            m = Math.min(...tmp)
+            if(m < maxAbs)
+                minAbs = m
             tonnesAbs.set(el.quarter, tmp)
         });
         tonnes[0] = tonnesAbs
@@ -126,6 +134,41 @@ Promise.all([
             .style("fill-opacity", "0.9")
             .style("stroke", "white")
             .style("stroke-width", "1px");
+
+        legendHeight = height_map - 50
+        
+        svg_map_Abs.select("g").append("rect").attr("id", "legendAbs")
+            .attr("x", width_map /4 * 3 + 20).attr("width", 50)
+            .attr("height", legendHeight).attr("y", 25).attr("fill", "url(#grAbs)")
+        svg_map_PC.select("g").append("rect").attr("id", "legendPC")
+            .attr("x", width_map /4 * 3 + 20).attr("width", 50)
+            .attr("height", legendHeight).attr("y", 25).attr("fill", "url(#grPC)")
+
+        d3.selectAll("svg").select("g").selectAll("line").data([0,1,2,3,4,5]).join("line")
+        .attr("x1", width_map /4 * 3 +70).attr("x2", width_map /4 * 3 +90)
+        .attr("y1", (d) => legendHeight * d / 5 +25).attr("y2", (d) => legendHeight * d / 5 +25)
+        .attr("stroke", "black")
+        
+        AbsStep = (maxAbs - minAbs) / 5
+        AbsStops = [0, 1, 2, 3, 4, 5].map((d) => colorScale[0](minAbs + AbsStep * d))
+        
+        PCStep = (maxPC - minPC) / 5
+        PCStops = [0, 1, 2, 3, 4, 5].map((d) => colorScale[1](minPC + PCStep * d))
+        
+        svg_map_Abs.select("g").selectAll("text").data([0,1,2,3,4,5]).join("text").text((d) => (minAbs + d * AbsStep).toFixed(2) + " CO2e")
+        .attr("x", width_map / 4* 3 + 90).attr("y", (d) => legendHeight * d / 5 +25 + 5)
+        svg_map_PC.select("g").selectAll("text").data([0,1,2,3,4,5]).join("text").text((d) => (minPC + d * PCStep).toFixed(2) + " CO2e per capita")
+        .attr("x", width_map / 4* 3 + 90).attr("y", (d) => legendHeight * d / 5 +25 + 5)
+        
+        svg_map_Abs.append("defs").append("linearGradient").attr("id", "grAbs")
+        .attr("x1", 0).attr("x2", 0).attr("y1", 1).attr("y2", 0)
+        .selectAll("stop").data(AbsStops).join("stop").attr("offset", (d, i) => i / 5).attr("stop-color", (d) => d)
+
+        svg_map_PC.append("defs").append("linearGradient").attr("id", "grPC")
+        .attr("x1", 0).attr("x2", 0).attr("y1", 1).attr("y2", 0)
+        .selectAll("stop").data(PCStops).join("stop").attr("offset", (d, i) => i / 5).attr("stop-color", (d) => d)
+
+
         redrawMap(0,0)
         redrawMap(0,1)
         d3.select("#selectQuarter_Abs").on("change", function (d) {

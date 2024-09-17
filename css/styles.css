@@ -23,7 +23,7 @@ header {
 
 header h1 {
     font-family: "Roboto Slab", sans-serif;
-    color : #1c7c54;
+    color: #1c7c54;
     text-align: center;
 }
 
@@ -34,21 +34,24 @@ header h3 {
 
 /** CONTENTS OF PAGE **/
 .content {
-        padding: 0px 20px;
-        max-width: 1600px;
-        margin-left: auto;
-        margin-right: auto;
+    padding: 0px 20px;
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 @media screen and (min-width: 480px) and (max-width: 767px) {
     .content {
         padding: 0px 30px;
     }
 }
+
 @media screen and (min-width: 768px) and (max-width: 1023px) {
     .content {
         padding: 0px 40px;
     }
 }
+
 @media screen and (min-width: 1024px) {
     .content {
         padding: 0px 50px;
@@ -73,7 +76,7 @@ h2 span {
     transition: 0.5s;
     z-index: 10;
 }
-  
+
 /* Style the links inside the navigation bar */
 .topnav a {
     float: left;
@@ -107,7 +110,7 @@ h2 span {
     top: 0;
     right: 0;
     left: 0;
-  }
+}
 
 /* When the screen is less than 1024 pixels wide, hide all links, except for the first one ("Home"). 
    Show the link that contains should open and close the topnav (.icon) */
@@ -115,12 +118,13 @@ h2 span {
     .topnav a:not(:first-child) {
         display: none;
     }
+
     .topnav a.icon {
         float: right;
         display: block;
     }
 }
-  
+
 /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. 
    This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
 @media screen and (max-width: 1024px) {
@@ -128,23 +132,27 @@ h2 span {
         position: sticky;
         height: 312px;
     }
+
     .topnav.responsive a.icon {
         position: absolute;
         margin-right: 20px;
         right: 0;
         top: 0;
     }
+
     .topnav.responsive a {
         float: none;
         display: block;
         text-align: left;
     }
 }
+
 @media screen and (min-width: 480px) and (max-width: 767px) {
     .topnav.responsive a.icon {
         margin-right: 30px;
     }
 }
+
 @media screen and (min-width: 768px) and (max-width: 1023px) {
     .topnav.responsive a.icon {
         margin-right: 40px;
@@ -174,19 +182,19 @@ p {
 p a:link {
     color: #b57f50;
 }
-  
-  /* visited link */
+
+/* visited link */
 p a:visited {
     color: #1c7c54;
 }
-  
-  /* mouse over link */
+
+/* mouse over link */
 p a:hover {
     color: black;
     background-color: #b57f50;
 }
-  
-  /* selected link */
+
+/* selected link */
 p a:active {
     color: #b57f50;
     background-color: white;
@@ -205,8 +213,8 @@ div.img-description {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     margin: 0px 20px 20px 20px;
     max-width: 700px;
-  }
-  
+}
+
 img {
     width: 100%;
 }
@@ -316,24 +324,22 @@ footer {
 
 
 
-    .node rect {
-      fill-opacity: .9;
-      shape-rendering: crispEdges;
-    }
-    
-    .node text {
-      pointer-events: none;
-      text-shadow: 0 1px 0 #fff;
-    }
-    
-    .link {
-      fill: none;
-      stroke: #000;
-      stroke-opacity: .2;
-    }
-    
-    .link:hover {
-      stroke-opacity: .5;
-    }
-    
-   
+.node rect {
+    fill-opacity: .9;
+    shape-rendering: crispEdges;
+}
+
+.node text {
+    pointer-events: none;
+    text-shadow: 0 1px 0 #fff;
+}
+
+.link {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .2;
+}
+
+.link:hover {
+    stroke-opacity: .5;
+}
