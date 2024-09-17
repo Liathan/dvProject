@@ -82,8 +82,8 @@ var maxAbs = 0
 var minAbs = 0
 
 Promise.all([
-    d3.json("../data/europe_.geojson"),
-    d3.csv("../data/perCapita.csv").then( function (d) {
+    d3.json("data/europe_.geojson"),
+    d3.csv("data/perCapita.csv").then( function (d) {
         
         tonnesPC = new Map()
         d.forEach(el => {
@@ -99,7 +99,7 @@ Promise.all([
         tonnes[1] = tonnesPC
         colorScale[1] = d3.scaleSequential([0, maxPC], d3.interpolateReds)
     }),
-    d3.csv("../data/absolute.csv").then( function (d) {
+    d3.csv("data/absolute.csv").then( function (d) {
         tonnesAbs = new Map()
         d.forEach(el => {
             tmp = Object.values(el).slice(1)
