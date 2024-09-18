@@ -36,7 +36,7 @@ function redrawMap(idx, map)
 {
     nameArr.forEach( (el,i) => {
         svg_map[map].select("."+el)
-        .attr("fill", colorScale[map](tonnes[map].get(quarters[+idx])[i]))
+        .attr("fill", colorScale[map](tonnes[map].get(years[+idx])[i]))
     });
     svg_map[map].selectAll(".ND").attr("fill", "#737373")
 }
@@ -48,7 +48,7 @@ var select = [document.getElementById("selectQuarter_Abs"), document.getElementB
 function tick(map)
 {
     var value = +select[map].value +1
-    if (value == quarters.length -1)
+    if (value == years.length -1)
     {
         isPlaying[map] = !isPlaying[map]
         clearInterval(intervalID[map])
@@ -68,7 +68,7 @@ function slider(map)
     else
     {
         var idx = +select[map].value +1
-        if(idx == quarters.length)
+        if(idx == years.length)
             select[map].value = 0
         intervalID[map] = setInterval(tick, 300, map)
         select[map].value = String(idx)
@@ -102,7 +102,7 @@ const tooltip_PC = d3.select(id_map_PC).append("div")
 
 Promise.all([
     d3.json("data/europe_.geojson"),
-    d3.csv("data/perCapita.csv").then( function (d) {
+    d3.csv("data/perCapitaByYear.csv").then( function (d) {
         
         tonnesPC = new Map()
         d.forEach(el => {
@@ -113,12 +113,12 @@ Promise.all([
             m = Math.min(...tmp)
             if(m < maxPC)
                 minPC = m
-            tonnesPC.set(el.quarter, tmp)
+            tonnesPC.set(el.year, tmp)
         });
         tonnes[1] = tonnesPC
         colorScale[1] = d3.scaleSequential([0, maxPC], d3.interpolateReds)
     }),
-    d3.csv("data/absolute.csv").then( function (d) {
+    d3.csv("data/absoluteByYear.csv").then( function (d) {
         tonnesAbs = new Map()
         d.forEach(el => {
             tmp = Object.values(el).slice(1)
@@ -128,11 +128,10 @@ Promise.all([
             m = Math.min(...tmp)
             if(m < maxAbs)
                 minAbs = m
-            tonnesAbs.set(el.quarter, tmp)
+            tonnesAbs.set(el.year, tmp)
         });
         tonnes[0] = tonnesAbs
         colorScale[0] = d3.scaleSequential([0, maxAbs], d3.interpolateReds)
-        console.log(maxAbs)
     })
 ]
     ).then( function (loadData){
@@ -174,9 +173,9 @@ Promise.all([
         PCStops = [0, 1, 2, 3, 4, 5].map((d) => colorScale[1](minPC + PCStep * d))
         
         svg_map_Abs.select("g").selectAll("text").data([0,1,2,3,4,5]).join("text").text((d) => (minAbs + d * AbsStep).toFixed(2) + " CO2e")
-        .attr("x", width_map / 4* 3 + 90).attr("y", (d) => legendHeight * d / 5 +25 + 5)
+        .attr("x", width_map / 4* 3 + 90).attr("y", (d) => legendHeight * (5-d) / 5 +25 + 5)
         svg_map_PC.select("g").selectAll("text").data([0,1,2,3,4,5]).join("text").text((d) => (minPC + d * PCStep).toFixed(2) + " CO2e per capita")
-        .attr("x", width_map / 4* 3 + 90).attr("y", (d) => legendHeight * d / 5 +25 + 5)
+        .attr("x", width_map / 4* 3 + 90).attr("y", (d) => legendHeight * (5-d) / 5 +25 + 5)
         
         svg_map_Abs.append("defs").append("linearGradient").attr("id", "grAbs")
         .attr("x1", 0).attr("x2", 0).attr("y1", 1).attr("y2", 0)
@@ -194,7 +193,7 @@ Promise.all([
 
             var name = d.properties.name
             idx = nameArr.indexOf(nameMap.get(name))
-            value = tonnes[0].get(quarters[+select[0].value])[idx] || "Extra EU Country"
+            value = tonnes[0].get(years[+select[0].value])[idx] || "Extra EU Country"
 
             svg_map_Abs.selectAll("."+name).style("stroke", "#000")
             .style("stroke-width", "2px").style("fill-opacity","1.0")
@@ -203,14 +202,14 @@ Promise.all([
             tooltip_ABS.transition("appear-box").duration(300)
             .style("opacity", "0.9")
 
-            tooltip_ABS.html("<span class='tooltiptext'>" + "<b>Name: " + name +
+            tooltip_ABS.html("<span class='tooltiptext'>" + "<b>" + name +
                 "</b><br>" + "CO2e tonnes: " + value + "</span>")
             .style("left", (e.pageX) + "px")
             .style("top", (e.pageY - 28) + "px");
 
 
         }).on("mouseout", function (e, d){
-            svg_map_Abs.selectAll("path").style("stroke", "white")
+            svg_map_Abs.selectAll("path").style("stroke", "black")
             .style("stroke-width", "1px").style("fill-opacity", "0.9")
             .transition("selected").duration(300)
         })
@@ -222,7 +221,7 @@ Promise.all([
 
             var name = d.properties.name
             idx = nameArr.indexOf(nameMap.get(name))
-            value = tonnes[1].get(quarters[+select[1].value])[idx] || "Extra EU Country"
+            value = tonnes[1].get(years[+select[1].value])[idx] || "Extra EU Country"
 
             svg_map_PC.selectAll("."+name).style("stroke", "#000")
             .style("stroke-width", "2px").style("fill-opacity","1.0")
@@ -231,7 +230,7 @@ Promise.all([
             tooltip_PC.transition("appear-box").duration(300)
             .style("opacity", "0.9")
 
-            tooltip_PC.html("<span class='tooltiptext'>" + "<b>Name: " + name +
+            tooltip_PC.html("<span class='tooltiptext'>" + "<b>" + name +
                 "</b><br>" + "CO2e tonnes per capita: " + value + "</span>")
             .style("left", (e.pageX) + "px")
             .style("top", (e.pageY - 28) + "px");
