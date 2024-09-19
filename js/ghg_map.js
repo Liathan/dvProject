@@ -54,7 +54,8 @@ function tick(map)
     {
         isPlaying[map] = !isPlaying[map]
         clearInterval(intervalID[map])
-        playButton[map].innerHTML = "<i class='fa fa-play'></i>"
+        d3.select(playButton[map]).select("polygon").attr("opacity","1")
+        d3.select(playButton[map]).selectAll("rect").attr("opacity","0")
     }
     select[map].value = +value
     select[map].dispatchEvent(new Event("change"))
@@ -72,7 +73,7 @@ function slider(map)
     {
         d3.select(playButton[map]).select("polygon").attr("opacity","0")
         d3.select(playButton[map]).selectAll("rect").attr("opacity","1")
-        var idx = +select[map].value +1
+        var idx = +select[map].value
         if(idx == years.length)
             select[map].value = 0
         intervalID[map] = setInterval(tick, 300, map)
