@@ -14,30 +14,67 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Fira+Sans">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="js/init.js"></script>
+    <style>
+        /* .chart {
+            display: flex;
+            flex-wrap: nowrap;
+        } */
+    </style>
 </head>
 
 <body>
-    
+
     <header class="padding-header">
         <h1>Greenhouse gasses in Europe</h1>
         <h3>Andrea Marchi</h3>
     </header>
-    <div id="ghg_map_Abs" class="chart"></div>
-    <div name="mapDiv_Abs">
-        <select id="selectQuarter_Abs"></select>
-        <button id="playButton_Abs"><i class="fa fa-play" map="0"></i></button>
+    <div id="ghg_map_Abs" class="chart">
+        <div class="explain">
+            orem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis libero lorem. Donec eget dapibus massa,
+            sit amet rutrum libero. Maecenas consequat feugiat nibh, non tempus nulla blandit et. Mauris tincidunt risus
+            sem, non suscipit tortor posuere quis. In rhoncus viverra purus, eu pharetra orci vestibulum sit amet. Cras
+            sit amet tellus efficitur augue placerat rutrum. Morbi ac tristique dolor. Etiam fringilla ipsum dui, nec
+            luctus odio egestas ac. Praesent ac risus vitae est condimentum sollicitudin et nec nisi. Fusce mattis, eros
+            rutrum eleifend venenatis, metus tortor vehicula leo, quis gravida enim massa id lorem. Aliquam efficitur
+            quam sapien, et laoreet erat vehicula id. Proin rutrum mauris at nisl malesuada, sed ultrices mauris
+            lobortis. Aenean a leo egestas sem vulputate porta eu sit amet odio. Aliquam aliquet vel purus vulputate
+            ultrices.
+
+            Sed scelerisque semper enim, a faucibus eros. Fusce vel accumsan elit. Sed in eros dapibus, condimentum
+            augue eu, aliquam odio. Mauris nisl eros, tempor id felis vitae, molestie bibendum augue. Etiam quis dui
+            sollicitudin, facilisis lorem id, vehicula tortor. Ut cursus porta porta. Nullam eros lorem, finibus at
+            rutrum ut, blandit ac nisi. Nulla facilisi. In fermentum dictum pulvinar.
+
+            Sed sed erat a magna volutpat porta eu in nisi. Nam a purus orci. Aliquam in tempus massa. In hac habitasse
+            platea dictumst. Maecenas nec sapien eget arcu commodo egestas eu ac magna. Praesent ac convallis neque.
+            Curabitur tristique congue elit a congue.
+
+            Morbi non eros pellentesque, euismod leo venenatis, ultricies erat. Donec diam elit, ultricies hendrerit
+            nulla id, rutrum sollicitudin urna. Quisque id pellentesque ligula, et tempus purus. Aliquam luctus eros
+            nulla, vitae accumsan nunc mollis ullamcorper. Proin vehicula ac erat vitae vehicula. Donec varius justo vel
+            ligula malesuada lacinia. Vestibulum porta bibendum blandit. Aliquam vel urna ligula. Aliquam vel ornare
+            ligula. In nec ligula urna. Nunc facilisis, orci a elementum interdum, orci magna venenatis nunc, at ornare
+            odio massa et elit. Proin dictum condimentum elementum. Etiam nisi massa, tempus nec dui at, vulputate
+            consectetur orci. Sed euismod mauris ipsum, eu lacinia nibh accumsan ultrices. Phasellus a ex eget turpis
+            hendrerit fermentum. Nulla efficitur finibus magna, vel dapibus erat posuere eget.
+
+            Nulla quis porta arcu. Aenean non ipsum eu metus tristique porta in in est. Donec risus turpis, lobortis sit
+            amet placerat ut, accumsan sed enim. Ut a sodales erat, vel convallis massa. Suspendisse sed pellentesque
+            erat. Etiam tincidunt porta ligula sit amet posuere. Vestibulum suscipit quam risus, a interdum erat cursus
+            eget. Ut ut eros euismod leo suscipit convallis. Nulla commodo massa ultrices neque cursus, in bibendum
+            turpis pellentesque. Duis quis scelerisque magna.
+        </div>
+        <select id="selectQuarter_Abs" hidden></select>
     </div>
     <div id="ghg_map_PC" class="chart"></div>
-    <div name="mapDiv_PC">
-        <select id="selectQuarter_PC"></select>
-        <button id="playButton_PC" ><i class="fa fa-play" map="1"></i></button>
-    </div>
-    
+    <select id="selectQuarter_PC" hidden></select>
+
     <script>
-        years.forEach(function (el, i){
-            d3.selectAll("select").append("option").html(el).attr("value", i)            
+        years.forEach(function (el, i) {
+            d3.selectAll("select").append("option").html(el).attr("value", i)
         });
     </script>
     <script src="js/ghg_map.js"></script>
 </body>
+
 </html>

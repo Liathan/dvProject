@@ -31,18 +31,20 @@ const svg_map_PC = d3.select(id_map_PC)
     .append("g")
 
 svg_map = [svg_map_Abs, svg_map_PC]
-
+labels = ["labelAbs", "labelPC"]
 function redrawMap(idx, map)
 {
+    curYear = years[+idx]
     nameArr.forEach( (el,i) => {
         svg_map[map].select("."+el)
-        .attr("fill", colorScale[map](tonnes[map].get(years[+idx])[i]))
+        .attr("fill", colorScale[map](tonnes[map].get(curYear)[i]))
     });
     svg_map[map].selectAll(".ND").attr("fill", "#737373")
+    d3.select("#"+labels[map]).text(curYear)
 }
-var isPlaying = false
+var isPlaying = [false, false]
 var intervalID = []
-var playButton = [document.getElementById("playButton_Abs"), document.getElementById("playButton_PC")]
+var playButton = ["#buttonAbs","#buttonPC"]
 var select = [document.getElementById("selectQuarter_Abs"), document.getElementById("selectQuarter_PC")]
 
 function tick(map)
@@ -60,13 +62,16 @@ function tick(map)
 
 function slider(map)
 {
-    if(isPlaying)
+    if(isPlaying[map])
     {
         clearInterval(intervalID[map])
-        playButton[map].innerHTML = "<i class='fa fa-play'></i>"
+        d3.select(playButton[map]).select("polygon").attr("opacity","1")
+        d3.select(playButton[map]).selectAll("rect").attr("opacity","0")
     }
     else
     {
+        d3.select(playButton[map]).select("polygon").attr("opacity","0")
+        d3.select(playButton[map]).selectAll("rect").attr("opacity","1")
         var idx = +select[map].value +1
         if(idx == years.length)
             select[map].value = 0
@@ -166,6 +171,17 @@ Promise.all([
         .attr("y1", (d) => legendHeight * d / 5 +25).attr("y2", (d) => legendHeight * d / 5 +25)
         .attr("stroke", "black")
         
+        svg_map_Abs.append("text").attr("y", 60).attr("font-size", "4em").attr("x","20").attr("id","labelAbs")
+        svg_map_Abs.append("g").attr("id","buttonAbs").append("polygon").attr("points", "160,20 200,40 160,60")
+        d3.select("#buttonAbs").append("rect").attr("x", "160").attr("y","20").attr("width",15).attr("height",40).attr("opacity","0")
+        d3.select("#buttonAbs").append("rect").attr("x", "180").attr("y","20").attr("width",15).attr("height",40).attr("opacity","0")
+        
+        
+        svg_map_PC.append("text").attr("y", 60).attr("font-size", "4em").attr("x","20").attr("id","labelPC")
+        svg_map_PC.append("g").attr("id","buttonPC").append("polygon").attr("points", "160,20 200,40 160,60")
+        d3.select("#buttonPC").append("rect").attr("x", "160").attr("y","20").attr("width",15).attr("height",40).attr("opacity","0")
+        d3.select("#buttonPC").append("rect").attr("x", "180").attr("y","20").attr("width",15).attr("height",40).attr("opacity","0")
+
         AbsStep = (maxAbs - minAbs) / 5
         AbsStops = [0, 1, 2, 3, 4, 5].map((d) => colorScale[0](minAbs + AbsStep * d))
         
@@ -257,6 +273,8 @@ Promise.all([
         d3.select("#selectQuarter_PC").on("change", function (d) {
             redrawMap(this.value, 1)
         })
-        playButton[0].onclick = () => slider(0)
-        playButton[1].onclick = () => slider(1)
+        // playButton[0].onclick = () => slider(0)
+        // playButton[1].onclick = () => slider(1)
+        d3.select("#buttonAbs").on("click", () => slider(0))
+        d3.select("#buttonPC").on("click", () => slider(1))
     })

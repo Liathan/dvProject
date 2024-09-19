@@ -240,10 +240,13 @@ div.img-description p {
 
 /** CHART **/
 .chart {
-    max-width: 1024px;
-    margin: 50px auto;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
+.explain{
+    flex-shrink: 150;
+}
 .tooltip {
     position: absolute;
     text-align: center;
