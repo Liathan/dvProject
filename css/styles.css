@@ -239,9 +239,14 @@ div.img-description p {
 }
 
 /** CHART **/
-.chart {
+#ghg_map_Abs {
     display: flex;
     flex-wrap: nowrap;
+}
+#ghg_map_PC {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
 }
 
 .explain{
