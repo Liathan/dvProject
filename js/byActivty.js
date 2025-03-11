@@ -8,9 +8,10 @@ const margin_stacked = { top: 0, right: 0, bottom: 50, left: 50 },
 svg_stacked = d3.select(id_stacked_percentage)
     .append("svg")
     .attr("width", width_stacked + margin_stacked.left + margin_stacked.right)
-    .attr("height", height_stacked + margin_stacked.top + margin_stacked.bottom)
+    .attr("height", height_stacked + margin_stacked.top + margin_stacked.bottom + 10)
     .attr("viewBox", '0 0 ' + (width_stacked + margin_stacked.left + margin_stacked.right) +
         ' ' + (height_stacked + margin_stacked.top + margin_stacked.bottom))
+    .style("margin-top", "2%")
     .append("g")
 
 y = d3.scaleLinear().domain([1, 0]).range([0, height_stacked])
@@ -31,7 +32,7 @@ d3.csv("data/percentageTHS.csv").then(function (data) {
     pippo = data
     x = d3.scaleBand().domain(d3.range(2008, 2022)).range([0, width_stacked]).padding(1)
     byGeo = groupBy(data, 'geo')
-    coso = d3.stack().keys(data.columns.slice(2))(byGeo.IS)
+    coso = d3.stack().keys(data.columns.slice(2))(byGeo.EU27_2020)
 
     area = d3.area()
         .x(function (d, i) { return x(+d.data.year); })
@@ -80,9 +81,11 @@ d3.csv("data/percentageTHS.csv").then(function (data) {
 
     svg_stacked.append("g").attr("transform", 'translate(50, 0)')
         .call(d3.axisLeft(y).tickValues([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]).tickFormat(d => d * 100 + '%'))
-
+    d3.select("#stackedNation").style("position", "absolute").style("top", "auto")
     for (const nation of nameMap.keys()) {
-        d3.select("#stackedNation").append("option").html(nation).attr("value", nation)
+        tmp = d3.select("#stackedNation").append("option").html(nation).attr("value", nation)
+        if (nation == "Europe")
+            tmp.attr("selected", true)
     };
 
 })
