@@ -40,3 +40,5 @@ const years = Array("2010", "2011", "2012", "2013", "2014", "2015", "2016", "201
 const palette = new Map([['A', '#f1a3ff'], ['B','blue'], ['C', '#993e00'], ['D', '#4c005c'], ['E', '#181818'], ['F', '#005c30'],['G','green'],['H', 'honeydew'],
                 ['I', '#808080'], ['J','#94feb4'], ['K', 'khaki'], ['L', 'lime'], ['M', '#c20088'], ['N', 'navy'], ['O', '#18a204'], ['P', 'pink'],
                 ['Q', '#426600'], ['R', 'red'], ['S', '#5ef1fe'], ['T', 'turquoise'], ['U', '#e1ff66'], ['HH', '#FF5000']])
+const radarType = new Map([["C0000X0350-0370", "Solid Fossil Fuels"], ["C0350-0370", "Manufactered Gases"], ["E7000", "Electricity"], ["G3000", "Natural Gas"], ["H8000", "Heat"],["O4000XBIO","Oil and Petroleum"],["P1000", "Peat"],["RA000", "Renewable"], ["S2000", "Oil Sands"], ["TOTAL", "Total"], ["W6100_6220", "Non-renewable waste"]])
+const radarPalette = new Map([["C0000X0350-0370", '#f1a3ff'], ["C0350-0370", 'blue'], ["E7000", "yellow"], ["G3000", '#993e00'], ["H8000", 'red'],["O4000XBIO","petroleum"],["P1000", '#4c005c'],["RA000", "green"], ["S2000", 'lime'], ["W6100_6220", "gray"]])
