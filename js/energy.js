@@ -26,13 +26,16 @@ for (const nation of nameMap.keys()) {
 var byCountry
 radius = height_radar / 2
 maxDom = 100
-var scale = d3.scaleLinear().domain([0, maxDom]).range([0, radius])
+numAxis = 6
+var scale = d3.scaleLinear().domain([0, maxDom]).range([1/numAxis * radius, radius])
 var angle = 2 * Math.PI / (years.length -2)
 xCoord = (l,i) => scale(l) * Math.cos(angle * i - Math.PI / 2)
 yCoord = (l,i) => scale(l) * Math.sin(angle * i - Math.PI / 2)
 
 function drawRadar()
 {
+    svg_radar.selectAll("polygon").remove()
+
     countryID = nameMap.get(document.getElementById("radarSelect").value)
     tot = byCountry[countryID].filter(d => d.siec == "TOTAL")[0]
 
@@ -45,9 +48,9 @@ function drawRadar()
         .append("polygon")
         .data([Object.keys(el).filter(d => d != 'geo' && d != 'siec')])
         .attr("points", d => d.reduce((acc, dd) => acc + xCoord(+el[dd] / tot[dd] * 100, (+dd - 2012)) +","+yCoord(+el[dd] / tot[dd] * 100, (+dd - 2012)) + " ", ""))
-        .attr("fill-opacity", "0.05")
+        .attr("fill-opacity", "0.075")
         .attr("stroke",radarPalette.get(el.siec) )
-        .attr("stroke-width", "3px")
+        .attr("stroke-width", "2px")
         .attr("fill",radarPalette.get(el.siec))
     });
     // svg_radar.append("g")
@@ -57,8 +60,25 @@ function drawRadar()
 d3.tsv("data/radar.tsv").then(function (data)
 {
     byCountry = groupBy(data, 'geo')
-    numAxis = 6
     
+    svg_radar.append("g")
+    .selectAll("rect")
+    .data(radarType.keys().toArray().filter(el => el != "TOTAL"))
+    .join("rect")
+    .attr("x", 0)
+    .attr("y", (d,i) => i *25)
+    .attr("width", 20)
+    .attr("height", 20)
+    .attr("fill", d => radarPalette.get(d))
+
+    svg_radar.append("g")
+    .selectAll(".legendLabel")
+    .data(radarType.keys().toArray().filter(el => el != "TOTAL"))
+    .join("text")
+    .attr("x", 25)
+    .attr("y", (d,i) => i *25 + 20)
+    .html(d => radarType.get(d))
+
     svg_radar.selectAll(".levels")
     .data(d3.range(1, numAxis+1))
     .join("circle")
@@ -74,7 +94,7 @@ d3.tsv("data/radar.tsv").then(function (data)
     .join("text")
     .attr("x", width_radar / 2)
     .attr("y", d => (numAxis - d -1 ) / numAxis * radius)
-    .text(d => d * 10 + "%")
+    .text(d => d * 20 + "%")
 
     var axis = svg_radar.selectAll(".axis")
     .data(years.slice(2))
