@@ -52,6 +52,7 @@ function drawRadar()
         .attr("stroke",radarPalette.get(el.siec) )
         .attr("stroke-width", "2px")
         .attr("fill",radarPalette.get(el.siec))
+        .attr("class", el.siec +" radarLine")
     });
     // svg_radar.append("g")
     // .append("polygons")
@@ -70,6 +71,22 @@ d3.tsv("data/radar.tsv").then(function (data)
     .attr("width", 20)
     .attr("height", 20)
     .attr("fill", d => radarPalette.get(d))
+    .on("mouseover", function (e, d) {
+        svg_radar.selectAll(".radarLine")
+        .attr("fill-opacity", "0.00")
+        .attr("stroke-width", "0px")
+        
+        svg_radar.select("."+d)
+        .attr("fill-opacity", "1")
+        .attr("stroke-width", "3px")
+
+        console.log("aaaa")
+    })
+    .on("mouseout", function(e,d){
+        svg_radar.selectAll(".radarLine")
+        .attr("fill-opacity", "0.075")
+        .attr("stroke-width", "2px")
+    })
 
     svg_radar.append("g")
     .selectAll(".legendLabel")
@@ -78,6 +95,22 @@ d3.tsv("data/radar.tsv").then(function (data)
     .attr("x", 25)
     .attr("y", (d,i) => i *25 + 20)
     .html(d => radarType.get(d))
+    .on("mouseover", function (e, d) {
+        svg_radar.selectAll(".radarLine")
+        .attr("fill-opacity", "0.00")
+        .attr("stroke-width", "0px")
+        
+        svg_radar.select("."+d)
+        .attr("fill-opacity", "0.9")
+        .attr("stroke-width", "3px")
+
+        console.log("aaaa")
+    })
+    .on("mouseout", function(e,d){
+        svg_radar.selectAll(".radarLine")
+        .attr("fill-opacity", "0.075")
+        .attr("stroke-width", "2px")
+    })
 
     svg_radar.selectAll(".levels")
     .data(d3.range(1, numAxis+1))
