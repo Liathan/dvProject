@@ -26,22 +26,22 @@ const tooltip_Stacked = d3.select(id_stacked_percentage).append("div")
     .style("padding", "10px")
     .style("opacity", 0);
 
+    
 
-var pippo
-d3.csv("data/percentageTHS.csv").then(function (data) {
-    pippo = data
-    x = d3.scaleBand().domain(d3.range(2008, 2022)).range([0, width_stacked]).padding(1)
-    byGeo = groupBy(data, 'geo')
-    coso = d3.stack().keys(data.columns.slice(2))(byGeo.EU27_2020)
+x = d3.scaleBand().domain(d3.range(2008, 2022)).range([0, width_stacked]).padding(1)
+function drawStacked()
+{
 
+    countryID = nameMap.get(document.getElementById("stackedNation").value)
+    coso = d3.stack().keys(dataAll.columns.slice(2))(byGeo[countryID])
     area = d3.area()
         .x(function (d, i) { return x(+d.data.year); })
         .y0(function (d) { return y(d[0]); })
         .y1(function (d) { return y(d[1]); })
-
+    svg_stacked.selectAll(".stackArea").remove()
     stackedG = svg_stacked.append("g")
-
-    stackedG.selectAll("path").data(coso).join("path").attr("d", area).style("fill", d => palette.get(d.key)).attr("class", d => d.key)
+    
+    stackedG.selectAll(".stackArea").data(coso).join("path").attr("d", area).style("fill", d => stackedPalette.get(d.key)).attr("class", d => d.key + " stackArea")
         .on('mouseover', function (e, d) {
             stackedG.selectAll("path")
             .style("fill-opacity", "0.5").transition("selected")
@@ -51,11 +51,11 @@ d3.csv("data/percentageTHS.csv").then(function (data) {
             stackedG.selectAll("."+cat).style("stroke", "#000")
             .style("stroke-width", "2px").style("fill-opacity","1.0")
             .transition("selected").duration(300);
-
+    
             tooltip_Stacked.transition("appear-box").duration(300)
             .style("opacity", "0.9")
-
-            tooltip_Stacked.html("<span class='tooltiptext'>" + "<b> Category: " + cat +
+            // TODO: categoria HH non so cosa sia, quindi il tooltip risutla orribile: trovare cosa o toglierla dai dati
+            tooltip_Stacked.html("<span class='tooltiptext'>" + "<b> Category: " + cat +": "+stackedType.get(cat) +
                 "</b></span>")
             .style("left", (e.pageX) + "px")
             .style("top", (e.pageY - 28) + "px");
@@ -69,6 +69,13 @@ d3.csv("data/percentageTHS.csv").then(function (data) {
         tooltip_Stacked.transition("disappear-box").duration(300).style("opacity", "0.0")
     })
 
+}    
+
+var byGeo
+var dataAll
+d3.csv("data/percentageTHS.csv").then(function (data) {
+    byGeo = groupBy(data, 'geo')
+    dataAll = data
 
     svg_stacked.append("g")
         .attr("transform", `translate(0, ${height_stacked})`)
@@ -88,6 +95,7 @@ d3.csv("data/percentageTHS.csv").then(function (data) {
             tmp.attr("selected", true)
     };
 
+    drawStacked()
 })
 
 
