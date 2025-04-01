@@ -26,19 +26,19 @@
         <div class="content">
             <a href="index.html" >Home</a>
             <a href="ghg_map.html">Pollution Map</a>
-            <a href="#" class="active">Pollution by Activity</a>
-            <a href="energySources.html" >Energy Sources</a>
-            <a href="fuelType.html">Fuel Type</a>
+            <a href="byActivity.html" >Pollution by Activity</a>
+            <a href="energySources.html">Energy Sources</a>
+            <a href="#" class="active">Fuel Type</a>
             <a href="javascript:void(0);" class="icon" onclick="toggle_icon_menu_topnav()">
                 <i class="fa fa-bars"></i>
             </a>
         </div>
     </div>
-    <div id = "stackedPercentage" >
-        <select id = "stackedNation" onchange="drawStacked()"></select>
+    <div id = "fuelTypeDiv" >
+        <select id = "fuelSelect" onchange="drawFuel()"></select>
 
     </div>
-    <script src="js/byActivty.js"></script>
+    <script src="js/fuelType.js"></script>
 </body>
 
 </html>
