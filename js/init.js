@@ -47,3 +47,8 @@ const stackedType = new Map([['A', 'Agricolture'], ['B','Mining'], ['C', 'Manufa
                 ['HH', '#FF5000']])
 const radarType = new Map([["C0000X0350-0370", "Solid Fossil Fuels"], ["C0350-0370", "Manufactered Gases"], ["E7000", "Electricity"], ["G3000", "Natural Gas"], ["H8000", "Heat"],["O4000XBIO","Oil and Petroleum"],["P1000", "Peat"],["RA000", "Renewable"], ["S2000", "Oil Sands"], ["TOTAL", "Total"], ["W6100_6220", "Non-renewable waste"]])
 const radarPalette = new Map([["C0000X0350-0370", '#f1a3ff'], ["C0350-0370", 'blue'], ["E7000", "yellow"], ["G3000", '#993e00'], ["H8000", 'red'],["O4000XBIO","petroleum"],["P1000", '#4c005c'],["RA000", "green"], ["S2000", 'lime'], ["W6100_6220", "gray"]])
+const fuelSiec = new Map([["E7100", "Electricity"], ["G3000", "Natural Gas"], ["O4630", "Liquefied Petroleum Gases"], ["O4652XR5210B","Motor Gasoline"], ["O4661XR5230B","Jet Fuel"],
+                          ["O4671XR5220B", "Diesel Oil"], ["O4680","Fuel oil"], ["R5210B", "Blended Biogasoline"], ["R5210P", "Pure Biogasoline"], ["R5220B", "Blended Biodiesel"],
+                          ["R5220P", "Pure Biodisel"], ["R5290", "Other Liquid biofuels"], ["R5300", "Biogases"]])
+const fuelPalette = new Map([["E7100", "yellow"], ["G3000", "#993e00"], ["O4630", "#f1a3ff"], ["O4652XR5210B","blue"], ["O4661XR5230B","red"], ["O4671XR5220B", "petroleum"], ["O4680","#4c005c"], ["R5210B", "lime"], ["R5210P", "green"], ["R5220B", "pink"],
+                        ["R5220P", "navy"], ["R5290", "gray"], ["R5300", "honeydew"]])

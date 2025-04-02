@@ -9,7 +9,7 @@ svg_fuelType = d3.select(id_fuelType)
     .append("svg")
     .attr("width", width_fuelType + margin_fuelType.left + margin_fuelType.right)
     .attr("height", height_fuelType + margin_fuelType.top + margin_fuelType.bottom + 10)
-    .attr("viewBox", '0 0 ' + (width_fuelType + margin_fuelType.left + margin_fuelType.right) +
+    .attr("viewBox", '-50 -10 ' + (width_fuelType + margin_fuelType.left + margin_fuelType.right) +
         ' ' + (height_fuelType + margin_fuelType.top + margin_fuelType.bottom))
     .style("margin-top", "2%")
     .append("g")
@@ -27,13 +27,13 @@ const tooltip_fuelType = d3.select(id_fuelType).append("div")
     
     
 var x = d3.scaleBand().domain(d3.range(2012, 2023)).range([0, width_fuelType]).padding(1)
-var y = d3.scaleLinear().domain([0, 7000]).range([0, height_fuelType])
+var y = d3.scaleLinear().domain([7000, 0]).range([0, height_fuelType])
 
 function drawFuel()
 {
 
-    countryID = nameMap.get(document.getElementById("stackedNation").value)
-    coso = d3.stack().keys(dataAll.columns.slice(2))(byGeo[countryID])
+    countryID = nameMap.get(document.getElementById("fuelSelect").value)
+    coso = d3.stack().keys(dataAll.columns.slice(2))(bySiec[countryID])
     area = d3.area()
         .x(function (d, i) { return x(+d.data.year); })
         .y0(function (d) { return y(d[0]); })
@@ -71,10 +71,10 @@ function drawFuel()
 
 }    
 
-var byGeo
+var bySiec
 var dataAll
 d3.tsv("data/fuelType.tsv").then(function (data) {
-    byGeo = groupBy(data, 'geo')
+    bySiec = groupBy(data, 'siec')
     dataAll = data
 
     svg_fuelType.append("g")
@@ -87,10 +87,11 @@ d3.tsv("data/fuelType.tsv").then(function (data) {
         .style("font-size", "12px")
 
     svg_fuelType.append("g").attr("transform", 'translate(50, 0)')
-        .call(d3.axisLeft(y).tickValues([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]).tickFormat(d => d * 100 + '%'))
-    d3.select("#stackedNation").style("position", "absolute").style("top", "auto")
+        .call(d3.axisLeft(y).tickValues([1000, 2000, 3000, 4000, 5000, 6000, 7000]).tickFormat(d => d + ' KTOE'))
+    d3.select("#fuelSelect").style("position", "absolute").style("right", "auto")
+    
     for (const nation of nameMap.keys()) {
-        tmp = d3.select("#stackedNation").append("option").html(nation).attr("value", nation)
+        tmp = d3.select("#fuelSelect").append("option").html(nation).attr("value", nation)
         if (nation == "Europe")
             tmp.attr("selected", true)
     };
