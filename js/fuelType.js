@@ -9,7 +9,7 @@ svg_fuelType = d3.select(id_fuelType)
     .append("svg")
     .attr("width", width_fuelType + margin_fuelType.left + margin_fuelType.right)
     .attr("height", height_fuelType + margin_fuelType.top + margin_fuelType.bottom + 10)
-    .attr("viewBox", '-50 -10 ' + (width_fuelType + margin_fuelType.left + margin_fuelType.right) +
+    .attr("viewBox", '-50 -10 ' + (width_fuelType + margin_fuelType.left + margin_fuelType.right + 200) +
         ' ' + (height_fuelType + margin_fuelType.top + margin_fuelType.bottom))
     .style("margin-top", "2%")
     .append("g")
@@ -26,52 +26,37 @@ const tooltip_fuelType = d3.select(id_fuelType).append("div")
     .style("opacity", 0);
     
     
-var x = d3.scaleBand().domain(d3.range(2012, 2023)).range([0, width_fuelType]).padding(1)
+var x = d3.scaleBand().domain(d3.range(2012, 2024)).range([0, width_fuelType]).padding(1)
 var y = d3.scaleLinear().domain([7000, 0]).range([0, height_fuelType])
 
+var bySiec
+lineData = new Map()
+nameMap.values().filter(d => d != "EU27_2020").forEach(d => lineData.set(d, []))
+console.log("hhhh", lineData.keys().toArray())
+
+line = d3.line().x(function (d){console.log(d, +d[0], x(+d[0])); return x(+d[0])}).y(function (d){console.log("YY", d, +d[1], y(+d[1])); return y(+d[1])})
 function drawFuel()
 {
+    svg_fuelType.selectAll(".line").remove()
+    
+    lineData.keys().forEach(d => lineData.set(d, []))
+    siec = fuelSiec.get(document.getElementById("fuelSelect").value)
+    bySiec[siec].filter(d => d.geo != "EU27_2020").forEach(d => lineData.set(d.geo, Object.entries(d).filter(obj => obj[0] != "siec" && obj[0] != "geo")))
 
-    countryID = nameMap.get(document.getElementById("fuelSelect").value)
-    coso = d3.stack().keys(dataAll.columns.slice(2))(bySiec[countryID])
-    area = d3.area()
-        .x(function (d, i) { return x(+d.data.year); })
-        .y0(function (d) { return y(d[0]); })
-        .y1(function (d) { return y(d[1]); })
-    svg_fuelType.selectAll(".stackArea").remove()
-    stackedG = svg_fuelType.append("g")
-    
-    stackedG.selectAll(".stackArea").data(coso).join("path").attr("d", area).style("fill", d => stackedPalette.get(d.key)).attr("class", d => d.key + " stackArea")
-        .on('mouseover', function (e, d) {
-            stackedG.selectAll("path")
-            .style("fill-opacity", "0.5").transition("selected")
-            .duration(300)
-            
-            cat = d.key
-            stackedG.selectAll("."+cat).style("stroke", "#000")
-            .style("stroke-width", "2px").style("fill-opacity","1.0")
-            .transition("selected").duration(300);
-    
-            tooltip_fuelType.transition("appear-box").duration(300)
-            .style("opacity", "0.9")
-            // TODO: categoria HH non so cosa sia, quindi il tooltip risutla orribile: trovare cosa o toglierla dai dati
-            tooltip_fuelType.html("<span class='tooltiptext'>" + "<b> Category: " + cat +": "+stackedType.get(cat) +
-                "</b></span>")
-            .style("left", (e.pageX) + "px")
-            .style("top", (e.pageY - 28) + "px");
-        }).on("mouseout", function (e, d){
-            stackedG.selectAll("path").style("stroke", "trasparent")
-            .style("stroke-width", "0px").style("fill-opacity", "1")
-            .transition("selected").duration(300)
-        })
-        
-    svg_fuelType.selectAll("g").on('mouseleave', function (e, d) {
-        tooltip_fuelType.transition("disappear-box").duration(300).style("opacity", "0.0")
+    lineData.keys().forEach(function (ld)
+    {
+        svg_fuelType.append("g")
+        .append("path")
+        .attr("stroke", namePalette.get(ld))
+        .attr("stroke-widht", 1.5)
+        .attr("d", line(lineData.get(ld)))
+        .attr("fill", "transparent")
+        .attr("class", "line")
+
     })
 
 }    
 
-var bySiec
 var dataAll
 d3.tsv("data/fuelType.tsv").then(function (data) {
     bySiec = groupBy(data, 'siec')
@@ -90,11 +75,37 @@ d3.tsv("data/fuelType.tsv").then(function (data) {
         .call(d3.axisLeft(y).tickValues([1000, 2000, 3000, 4000, 5000, 6000, 7000]).tickFormat(d => d + ' KTOE'))
     d3.select("#fuelSelect").style("position", "absolute").style("right", "auto")
     
-    for (const nation of nameMap.keys()) {
-        tmp = d3.select("#fuelSelect").append("option").html(nation).attr("value", nation)
-        if (nation == "Europe")
-            tmp.attr("selected", true)
+    for (const siec of fuelSiec.keys()) {
+        d3.select("#fuelSelect").append("option").html(fuelSiec.get(siec)).attr("value", siec)
     };
+
+    svg_fuelType.append("g").selectAll(".legend")
+    .data(namePalette.keys()).join("rect").attr("x", (d,i) => x(2023) + 100).attr("y", (d,i) => i * 25)
+    .attr("width", "20").attr("height","20").attr("fill", d => namePalette.get(d))
+
+    svg_fuelType.append("g")
+    .selectAll(".legendLabel")
+    .data(nameMap.keys().toArray())
+    .join("text")
+    .attr("x", x(2023) + 130)
+    .attr("y", (d,i) => i *25 + 20)
+    .html(d => d)
+    .on("mouseover", function (e, d) {
+        // svg_fuelType.selectAll(".radarLine")
+        // .attr("fill-opacity", "0.00")
+        // .attr("stroke-width", "0px")
+        
+        // svg_fuelType.select("."+d)
+        // .attr("fill-opacity", "0.9")
+        // .attr("stroke-width", "3px")
+
+        // console.log("aaaa")
+    })
+    .on("mouseout", function(e,d){
+        // svg_fuelType.selectAll(".radarLine")
+        // .attr("fill-opacity", "0.075")
+        // .attr("stroke-width", "2px")
+    })
 
     drawFuel()
 })
