@@ -38,17 +38,35 @@ line = d3.line().x(function (d){console.log(d, +d[0], x(+d[0])); return x(+d[0])
 function drawFuel()
 {
     svg_fuelType.selectAll(".line").remove()
+    svg_fuelType.selectAll(".yAxis").remove()
     
     lineData.keys().forEach(d => lineData.set(d, []))
     siec = fuelSiec.get(document.getElementById("fuelSelect").value)
     bySiec[siec].filter(d => d.geo != "EU27_2020").forEach(d => lineData.set(d.geo, Object.entries(d).filter(obj => obj[0] != "siec" && obj[0] != "geo")))
 
+    max = -1
+    min = Infinity
+    lineData.keys().forEach(function (ld)
+    {
+        lineData.get(ld).forEach(function (d){
+            if (+d[1] > max)
+                max = +d[1]
+            if (+d[1] < min)
+                min = +d[1]
+        })
+    })
+    scale = Math.floor(((max - min) / 10 + 10) / 10) * 10
+    dMax = Math.floor((max + scale)/scale) * scale
+    dMin = Math.floor(min /scale) * scale
+    y.domain([dMax, 0])
+    svg_fuelType.append("g").attr("transform", 'translate(50, 0)').attr("class", "yAxis")
+    .call(d3.axisLeft(y).tickValues(d3.range(dMin + scale, dMax +scale, scale)).tickFormat(d => d + ' KTOE'))
     lineData.keys().forEach(function (ld)
     {
         svg_fuelType.append("g")
         .append("path")
         .attr("stroke", namePalette.get(ld))
-        .attr("stroke-widht", 1.5)
+        .attr("stroke-width", 1.5)
         .attr("d", line(lineData.get(ld)))
         .attr("fill", "transparent")
         .attr("class", "line")
@@ -71,12 +89,12 @@ d3.tsv("data/fuelType.tsv").then(function (data) {
         .style("font-family", "Fira Sans, sans-serif")
         .style("font-size", "12px")
 
-    svg_fuelType.append("g").attr("transform", 'translate(50, 0)')
+    svg_fuelType.append("g").attr("transform", 'translate(50, 0)').attr("class", "yAxis")
         .call(d3.axisLeft(y).tickValues([1000, 2000, 3000, 4000, 5000, 6000, 7000]).tickFormat(d => d + ' KTOE'))
     d3.select("#fuelSelect").style("position", "absolute").style("right", "auto")
     
     for (const siec of fuelSiec.keys()) {
-        d3.select("#fuelSelect").append("option").html(fuelSiec.get(siec)).attr("value", siec)
+        d3.select("#fuelSelect").append("option").html(siec).attr("value", siec)
     };
 
     svg_fuelType.append("g").selectAll(".legend")
