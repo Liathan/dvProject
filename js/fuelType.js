@@ -32,9 +32,8 @@ var y = d3.scaleLinear().domain([7000, 0]).range([0, height_fuelType])
 var bySiec
 lineData = new Map()
 nameMap.values().filter(d => d != "EU27_2020").forEach(d => lineData.set(d, []))
-console.log("hhhh", lineData.keys().toArray())
 
-line = d3.line().x(function (d){console.log(d, +d[0], x(+d[0])); return x(+d[0])}).y(function (d){console.log("YY", d, +d[1], y(+d[1])); return y(+d[1])})
+line = d3.line().x(function (d){return x(+d[0])}).y(function (d){ return y(+d[1])})
 function drawFuel()
 {
     svg_fuelType.selectAll(".line").remove()
@@ -69,7 +68,7 @@ function drawFuel()
         .attr("stroke-width", 1.5)
         .attr("d", line(lineData.get(ld)))
         .attr("fill", "transparent")
-        .attr("class", "line")
+        .attr("class", "line "+ld)
 
     })
 
@@ -98,31 +97,40 @@ d3.tsv("data/fuelType.tsv").then(function (data) {
     };
 
     svg_fuelType.append("g").selectAll(".legend")
-    .data(namePalette.keys()).join("rect").attr("x", (d,i) => x(2023) + 100).attr("y", (d,i) => i * 25)
-    .attr("width", "20").attr("height","20").attr("fill", d => namePalette.get(d))
+    .data(namePalette.keys().filter(d => d != "EU27_2020")).join("rect").attr("x", (d,i) => x(2023) + 100).attr("y", (d,i) => i * 25)
+    .attr("width", "20").attr("height","20").attr("fill", d => namePalette.get(d)).attr("class", d => d)
+    .on("mouseover", function (e, d) {
+        svg_fuelType.selectAll(".line")
+        .attr("stroke-width", "0.5px")
+        
+        svg_fuelType.select(".line."+d)
+        .attr("stroke-width", "3px")
+        console.log("."+nameMap.get(d))
+    })
+    .on("mouseout", function(e,d){
+        svg_fuelType.selectAll(".line")
+        .attr("stroke-width", 1.5)
+    })
 
     svg_fuelType.append("g")
     .selectAll(".legendLabel")
-    .data(nameMap.keys().toArray())
+    .data(nameMap.keys().filter(d => d != "Europe").toArray())
     .join("text")
     .attr("x", x(2023) + 130)
     .attr("y", (d,i) => i *25 + 20)
+    .attr("class", d => nameMap.get(d))
     .html(d => d)
     .on("mouseover", function (e, d) {
-        // svg_fuelType.selectAll(".radarLine")
-        // .attr("fill-opacity", "0.00")
-        // .attr("stroke-width", "0px")
+        svg_fuelType.selectAll(".line")
+        .attr("stroke-width", "0.5px")
         
-        // svg_fuelType.select("."+d)
-        // .attr("fill-opacity", "0.9")
-        // .attr("stroke-width", "3px")
-
-        // console.log("aaaa")
+        svg_fuelType.select(".line."+nameMap.get(d))
+        .attr("stroke-width", "3px")
+        console.log("."+nameMap.get(d))
     })
     .on("mouseout", function(e,d){
-        // svg_fuelType.selectAll(".radarLine")
-        // .attr("fill-opacity", "0.075")
-        // .attr("stroke-width", "2px")
+        svg_fuelType.selectAll(".line")
+        .attr("stroke-width", 1.5)
     })
 
     drawFuel()
