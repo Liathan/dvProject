@@ -25,7 +25,7 @@
     <div id="myTopnav" class="topnav stickyNav ">
         <div class="content">
             <a href="index.html" >Home</a>
-            <a href="ghg_map.html">Pollution Map</a>
+            <a href="index.html">Pollution Map</a>
             <a href="#" class="active">Pollution by Activity</a>
             <a href="energySources.html" >Energy Sources</a>
             <a href="fuelType.html">Fuel Type</a>
@@ -34,9 +34,14 @@
             </a>
         </div>
     </div>
-    <div id = "stackedPercentage" >
-        <select id = "stackedNation" onchange="drawStacked()"></select>
-
+    <select id = "stackedNation" onchange="drawStacked()"></select>
+    <div id = "stackedPercentage" class="chart">
+        <div class="explain">
+            In this page we have a stacked area chart. This chart shows the distribution of CO<sub>2</sub> produced by activity. At the top, it's possible to select a particular
+            country.<br>From this plot, is easy to identify which type of activities are more polluting on average in Europe, and identify countries that deviate more and their
+            most important economy sectors.<br>
+            We can observe that agricolture, manufactoring, transportation, and households are consistently the top polluting activities.
+        </div>
     </div>
     <script src="js/byActivty.js"></script>
 </body>

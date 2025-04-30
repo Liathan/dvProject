@@ -248,7 +248,21 @@ div.img-description p {
     flex-wrap: nowrap;
     flex-direction: row-reverse;
 }
-
+#stackedPercentage{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+}
+#radar{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+}
+#fuelTypeDiv{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+}
 .explain{
     flex-shrink: 150;
 }

@@ -73,7 +73,7 @@ const stackedType = new Map([['A', 'Agricolture'], ['B','Mining'], ['C', 'Manufa
                 ['F', 'Construction'],['G','Trade and vehicle repair'],['H', 'Transposrtation and Storage'],['I', 'Accomodation and Food services'], ['J','Communication'], 
                 ['K', 'Finance'], ['L', 'Real Estate'], ['M', 'Professional, Scientific activities'], ['N', 'Administration'], ['O', 'Public services and Defence'], ['P', 'Education'],
                 ['Q', 'Healt and Social Work'], ['R', 'Arts and Recreation'], ['S', 'Other service'], ['T', 'Households related activities'], ['U', 'Extraterritorial organisations'],
-                ['HH', '#FF5000']])
+                ['HH', 'House Holds ']])
 const radarType = new Map([["C0000X0350-0370", "Solid Fossil Fuels"], ["C0350-0370", "Manufactered Gases"], ["E7000", "Electricity"], ["G3000", "Natural Gas"], ["H8000", "Heat"],["O4000XBIO","Oil and Petroleum"],["P1000", "Peat"],["RA000", "Renewable"], ["S2000", "Oil Sands"], ["TOTAL", "Total"], ["W6100_6220", "Non-renewable waste"]])
 const radarPalette = new Map([["C0000X0350-0370", '#f1a3ff'], ["C0350-0370", 'blue'], ["E7000", "yellow"], ["G3000", '#993e00'], ["H8000", 'red'],["O4000XBIO","petroleum"],["P1000", '#4c005c'],["RA000", "green"], ["S2000", 'lime'], ["W6100_6220", "gray"]])
 const fuelSiec = new Map([[ "Electricity","E7000"], [ "Natural Gas","G3000"], [ "Liquefied Petroleum Gases","O4630"], ["Motor Gasoline","O4652XR5210B"], ["Jet Fuel","O4661XR5230B"],

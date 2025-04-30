@@ -25,7 +25,7 @@
     <div id="myTopnav" class="topnav stickyNav ">
         <div class="content">
             <a href="index.html" >Home</a>
-            <a href="ghg_map.html">Pollution Map</a>
+            <a href="index.html">Pollution Map</a>
             <a href="byActivity.html" >Pollution by Activity</a>
             <a href="#" class="active">Energy Sources</a>
             <a href="fuelType.html">Fuel Type</a>
@@ -34,9 +34,13 @@
             </a>
         </div>
     </div>
-    <div id = "radar" >
-        <select id = "radarSelect" onchange="drawRadar()"></select>
-
+    <select id = "radarSelect" onchange="drawRadar()"></select>
+    <div id = "radar" class="chart">
+        <div class="explain">
+            This plot is a radarchart, sometimes also called spider chart, used to display the distribution of energy produced by different sources, each with its own color,
+            across years, the various axis. As before, on the top left we can select which country to show data and, over the mouse on the legend, highlight that portion of
+            the plot.
+        </div>
     </div>
     <script src="js/energy.js"></script>
 </body>
